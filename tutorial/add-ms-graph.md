@@ -33,7 +33,7 @@ module GraphHelper
 end
 ```
 
-Nehmen Sie sich einen Moment Zeit, um zu sehen, was dieser Code macht. Sie stellt eine einfache GET-Anforderung über `httparty` das gem an den angeforderten Endpunkt. Sie sendet das Zugriffstoken in der `Authorization` Kopfzeile und enthält alle übergebenen Abfrageparameter.
+Nehmen Sie sich einen Moment Zeit, um zu sehen, was dieser Code macht. Sie stellt eine einfache Get-Anforderung über `httparty` das gem an den angeforderten Endpunkt. Sie sendet das Zugriffstoken in der `Authorization` Kopfzeile und enthält alle übergebenen Abfrageparameter.
 
 Wenn Sie beispielsweise die `make_api_call` Methode zum Abrufen von `https://graph.microsoft.com/v1.0/me?$select=displayName`verwenden möchten, können Sie Sie wie folgt aufrufen:
 

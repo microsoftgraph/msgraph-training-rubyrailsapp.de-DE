@@ -1,6 +1,6 @@
-# <a name="readme"></a>README
+# <a name="readme"></a>Readme
 
-Diese README-Datei würde normalerweise dokumentieren, welche Schritte erforderlich sind, um die Anwendung zu starten.
+Diese Readme-Datei würde normalerweise dokumentieren, welche Schritte erforderlich sind, um die Anwendung zu starten.
 
 Mögliche Aspekte:
 
@@ -18,6 +18,6 @@ Mögliche Aspekte:
 
 * Dienste (Auftrags Warteschlangen, Cacheserver, Suchmaschinen usw.)
 
-* Bereitstellungsanweisungen
+* Bereitstellungsinformationen
 
 * ...
