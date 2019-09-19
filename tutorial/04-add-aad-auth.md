@@ -41,7 +41,7 @@ module OmniAuth
 
       DEFAULT_SCOPE = 'openid email profile User.Read'.freeze
 
-      # Configure the Azure v2 endpoints
+      # Configure the Microsoft identity platform endpoints
       option  :client_options,
               site:          'https://login.microsoftonline.com',
               authorize_url: '/common/oauth2/v2.0/authorize',
@@ -86,7 +86,7 @@ end
 
 Nehmen Sie sich einen Moment Zeit, um zu überprüfen, was dieser Code tut.
 
-- Sie legt die `client_options` fest, um die Azure v2-Endpunkte anzugeben.
+- Sie legt die `client_options` fest, um die Microsoft Identity Platform-Endpunkte anzugeben.
 - Er gibt an, `scope` dass der Parameter während der Autorisierungsphase gesendet werden soll.
 - Die `id` Eigenschaft des Benutzers wird als eindeutige ID für den Benutzer zugeordnet.
 - Es verwendet das Zugriffstoken zum Abrufen des Benutzerprofils aus Microsoft Graph, um den `raw_info` Hash auszufüllen.
@@ -290,7 +290,7 @@ Starten Sie den Server neu, und fahren Sie mit dem Anmeldevorgang fort. Sie soll
 
 ![Ein Screenshot der Startseite nach der Anmeldung](./images/add-aad-auth-01.png)
 
-Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers **** , um auf den Abmeldelink zuzugreifen. Durch **** klicken auf Abmelden wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite zurück.
+Klicken Sie in der oberen rechten Ecke auf den Avatar des Benutzers, um auf den **Abmelde** Link zuzugreifen. Durch Klicken auf **Abmelden** wird die Sitzung zurückgesetzt, und Sie kehren zur Startseite zurück.
 
 ![Screenshot des Dropdownmenüs mit dem Link zum Abmelden](./images/add-aad-auth-02.png)
 
