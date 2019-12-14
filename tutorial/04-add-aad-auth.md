@@ -115,17 +115,7 @@ Nachdem die OmniAuth-Middleware nun konfiguriert wurde, können Sie mit dem Hinz
 rails generate controller Auth
 ```
 
-Öffnen Sie die Datei `./app/controllers/auth_controller.rb`. Fügen Sie der Klasse `AuthController` die folgende Methode hinzu.
-
-```ruby
-def signin
-  redirect_to '/auth/microsoft_graph_auth'
-end
-```
-
-All diese Methode wird auf die Route umgeleitet, die von OmniAuth erwartet wird, um unsere benutzerdefinierte Strategie aufzurufen.
-
-Fügen Sie der `AuthController` -Klasse als nächstes eine Rückrufmethode hinzu. Diese Methode wird von der OmniAuth-Middleware aufgerufen, sobald der OAuth-Fluss abgeschlossen ist.
+Öffnen Sie die Datei `./app/controllers/auth_controller.rb`. Fügen Sie der `AuthController` -Klasse eine Rückrufmethode hinzu. Diese Methode wird von der OmniAuth-Middleware aufgerufen, sobald der OAuth-Fluss abgeschlossen ist.
 
 ```ruby
 def callback
@@ -140,22 +130,20 @@ end
 Im Moment wird der von OmniAuth bereitgestellte Hash gerendert. Wir verwenden dies, um zu überprüfen, ob unsere Anmeldung funktionsfähig ist, bevor Sie fortfahren. Bevor wir testen, müssen wir die Routen zu `./config/routes.rb`hinzufügen.
 
 ```ruby
-get 'auth/signin'
-
 # Add route for OmniAuth callback
 match '/auth/:provider/callback', to: 'auth#callback', via: [:get, :post]
 ```
 
-Aktualisieren Sie nun die Ansichten, um `signin` die Aktion zu verwenden. Öffnen `./app/views/layouts/application.html.erb`Sie. Ersetzen Sie die `<a href="#" class="nav-link">Sign In</a>` -Verbindung durch Folgendes.
+Aktualisieren Sie nun die Ansichten für die Anmeldung. Öffnen `./app/views/layouts/application.html.erb`Sie. Ersetzen Sie die `<a href="#" class="nav-link">Sign In</a>` -Verbindung durch Folgendes.
 
 ```html
-<%= link_to "Sign In", {:controller => :auth, :action => :signin}, :class => "nav-link" %>
+<%= link_to "Click here to sign in", "/auth/microsoft_graph_auth", method: :post, class: "nav-link" %>
 ```
 
 Öffnen Sie `./app/views/home/index.html.erb` die Datei, und `<a href="#" class="btn btn-primary btn-large">Click here to sign in</a>` ersetzen Sie die folgende.
 
 ```html
-<%= link_to "Click here to sign in", {:controller => :auth, :action => :signin}, :class => "btn btn-primary btn-large" %>
+<%= link_to "Click here to sign in", "/auth/microsoft_graph_auth", method: :post, class: "btn btn-primary btn-large" %>
 ```
 
 Starten Sie den Server, und `https://localhost:3000`navigieren Sie zu. Klicken Sie auf die Anmeldeschaltfläche, und Sie sollten zu `https://login.microsoftonline.com`umgeleitet werden. Melden Sie sich mit Ihrem Microsoft-Konto an, und stimmen Sie den angeforderten Berechtigungen zu. Der Browser wird an die APP umgeleitet, wobei der von OmniAuth generierte Hash angezeigt wird.

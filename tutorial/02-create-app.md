@@ -23,6 +23,7 @@ rails server
 Bevor Sie fortfahren, sollten Sie einige zusätzliche Edelsteine installieren, die Sie später verwenden werden:
 
 - [omniauth-oauth2](https://github.com/omniauth/omniauth-oauth2) für die Verarbeitung von Anmelde-und OAuth-Token-Flows.
+- [omniauth-rails_csrf_protection](https://github.com/cookpad/omniauth-rails_csrf_protection) zum Hinzufügen von CSRF-Schutz zu omniauth.
 - [httparty](https://github.com/jnunemaker/httparty) zum tätigen von Anrufen an Microsoft Graph.
 - [nokogiri](https://github.com/sparklemotion/nokogiri) zum Verarbeiten von HTML-Textkörpern von e-Mails.
 - [ActiveRecord-session_store](https://github.com/rails/activerecord-session_store) zum Speichern von Sitzungen in der Datenbank.
@@ -31,6 +32,7 @@ Führen Sie die folgenden Befehle in der CLI aus.
 
 ```Shell
 bundle add omniauth-oauth2
+bundle add omniauth-rails_csrf_protection
 bundle add httparty
 bundle add nokogiri
 bundle add activerecord-session_store
