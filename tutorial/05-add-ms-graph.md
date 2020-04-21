@@ -4,34 +4,34 @@ In dieser Übung werden Sie das Microsoft Graph in die Anwendung integrieren. F�
 
 ## <a name="create-a-graph-helper"></a>Erstellen einer Graph-Hilfsfunktion
 
-Erstellen Sie einen Helfer zum Verwalten aller API-Aufrufe. Führen Sie den folgenden Befehl in der CLI aus, um den Helfer zu generieren.
+1. Erstellen Sie einen Helfer zum Verwalten aller API-Aufrufe. Führen Sie den folgenden Befehl in der CLI aus, um den Helfer zu generieren.
 
-```Shell
-rails generate helper Graph
-```
+    ```Shell
+    rails generate helper Graph
+    ```
 
-Öffnen Sie die neu `./app/helpers/graph_helper.rb` erstellte Datei, und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen Sie **/App/Helpers/graph_helper. RB** , und ersetzen Sie den Inhalt durch Folgendes.
 
-```ruby
-require 'httparty'
+    ```ruby
+    require 'httparty'
 
-# Graph API helper methods
-module GraphHelper
-  GRAPH_HOST = 'https://graph.microsoft.com'.freeze
+    # Graph API helper methods
+    module GraphHelper
+      GRAPH_HOST = 'https://graph.microsoft.com'.freeze
 
-  def make_api_call(endpoint, token, params = nil)
-    headers = {
-      Authorization: "Bearer #{token}"
-    }
+      def make_api_call(endpoint, token, params = nil)
+        headers = {
+          Authorization: "Bearer #{token}"
+        }
 
-    query = params || {}
+        query = params || {}
 
-    HTTParty.get "#{GRAPH_HOST}#{endpoint}",
-                 headers: headers,
-                 query: query
-  end
-end
-```
+        HTTParty.get "#{GRAPH_HOST}#{endpoint}",
+                     headers: headers,
+                     query: query
+      end
+    end
+    ```
 
 Nehmen Sie sich einen Moment Zeit, um zu überprüfen, was dieser Code tut. Es stellt eine einfache Get-Anforderung über `httparty` das gem an den angeforderten Endpunkt. Er sendet das Zugriffstoken in der `Authorization` Kopfzeile und enthält alle übergebenen Abfrageparameter.
 
@@ -43,98 +43,66 @@ make_api_call `/v1.0/me`, access_token, { '$select': 'displayName' }
 
 Sie werden später darauf aufbauen, wenn Sie weitere Features von Microsoft Graph in die APP implementieren.
 
-## <a name="get-calendar-events-from-outlook"></a>Abrufen von Kalenderereignissen aus Outlook
+## <a name="get-calendar-events-from-outlook"></a>Abrufen von Kalenderereignissen von Outlook
 
-Beginnen wir mit dem Hinzufügen der Möglichkeit, Ereignisse im Kalender des Benutzers anzuzeigen. Führen Sie in der CLI den folgenden Befehl aus, um einen neuen Controller hinzuzufügen.
+1. Führen Sie in der CLI den folgenden Befehl aus, um einen neuen Controller hinzuzufügen.
 
-```Shell
-rails generate controller Calendar index
-```
+    ```Shell
+    rails generate controller Calendar index
+    ```
 
-Nachdem nun die Route verfügbar ist, aktualisieren Sie die **Kalender** Verknüpfung in der navbar, `./app/view/layouts/application.html.erb` um Sie zu verwenden. Ersetzen Sie die `<a class="nav-link" href="#">Calendar</a>` -Verbindung durch Folgendes.
+1. Fügen Sie die neue Route zu **./config/routes.RB**.
 
-```html
-<%= link_to "Calendar", {:controller => :calendar, :action => :index}, class: "nav-link#{' active' if controller.controller_name == 'calendar'}" %>
-```
+    ```ruby
+    get 'calendar', to: 'calendar#index'
+    ```
 
-Fügen Sie der Graph-Hilfe eine neue Methode hinzu, um [die Ereignisse des Benutzers](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/user_list_events)aufzulisten. Öffnen `./app/helpers/graph_helper.rb` Sie das `GraphHelper` Modul, und fügen Sie die folgende Methode hinzu.
+1. Fügen Sie der Graph-Hilfe eine neue Methode hinzu, um [die Ereignisse des Benutzers aufzulisten](/graph/api/user-list-events?view=graph-rest-1.0). Öffnen Sie **/App/Helpers/graph_helper. RB** , und fügen Sie dem `GraphHelper` Modul die folgende Methode hinzu.
 
-```ruby
-def get_calendar_events(token)
-  get_events_url = '/v1.0/me/events'
+    :::code language="ruby" source="../demo/graph-tutorial/app/helpers/graph_helper.rb" id="GetCalendarSnippet":::
 
-  query = {
-    '$select': 'subject,organizer,start,end',
-    '$orderby': 'createdDateTime DESC'
-  }
+    Überlegen Sie sich, was dieser Code macht.
 
-  response = make_api_call get_events_url, token, query
+    - Die URL, die aufgerufen wird, lautet `/v1.0/me/events`.
+    - Der `$select` Parameter schränkt die zurückgegebenen Felder für die einzelnen Ereignisse auf diejenigen ein, die von unserer Ansicht tatsächlich verwendet werden.
+    - Der `$orderby` Parameter sortiert die Ergebnisse nach dem Datum und der Uhrzeit, zu der Sie erstellt wurden, wobei das letzte Element zuerst angezeigt wird.
+    - Für eine erfolgreiche Antwort gibt es das Array von Elementen zurück, die `value` im Schlüssel enthalten sind.
 
-  raise response.parsed_response.to_s || "Request returned #{response.code}" unless response.code == 200
-  response.parsed_response['value']
-end
-```
+1. Öffnen Sie **/App/Controllers/calendar_controller. RB** , und ersetzen Sie den gesamten Inhalt durch Folgendes.
 
-Überprüfen Sie, was dieser Code tut.
+    ```ruby
+    # Calendar controller
+    class CalendarController < ApplicationController
+      include GraphHelper
 
-- Die URL, die aufgerufen wird `/v1.0/me/events`.
-- Der `$select` Parameter schränkt die zurückgegebenen Felder für die einzelnen Ereignisse auf diejenigen ein, die von unserer Ansicht tatsächlich verwendet werden.
-- Der `$orderby` Parameter sortiert die Ergebnisse nach dem Datum und der Uhrzeit, zu der Sie erstellt wurden, wobei das letzte Element zuerst angezeigt wird.
-- Für eine erfolgreiche Antwort gibt es das Array von Elementen zurück, die `value` im Schlüssel enthalten sind.
+      def index
+        @events = get_calendar_events access_token || []
+        render json: @events
+      rescue RuntimeError => e
+        @errors = [
+          {
+            message: 'Microsoft Graph returned an error getting events.',
+            debug: e
+          }
+        ]
+      end
+    end
+    ```
 
-Nun können Sie dies testen. Öffnen `./app/controllers/calendar_controller.rb` und aktualisieren Sie `index` die Aktion, um diese Methode aufzurufen und die Ergebnisse zu rendern.
-
-```ruby
-# Calendar controller
-class CalendarController < ApplicationController
-  include GraphHelper
-
-  def index
-    @events = get_calendar_events access_token || []
-    render json: @events
-  rescue RuntimeError => e
-    @errors = [
-      {
-        message: 'Microsoft Graph returned an error getting events.',
-        debug: e
-      }
-    ]
-  end
-end
-```
-
-Starten Sie den Server neu. Melden Sie sich an, und klicken Sie in der Navigationsleiste auf den Link **Kalender** . Wenn alles funktioniert, sollte ein JSON-Abbild der Ereignisse im Kalender des Benutzers angezeigt werden.
+1. Starten Sie den Server neu. Melden Sie sich an, und klicken Sie in der Navigationsleiste auf den Link **Kalender** . Wenn alles funktioniert, sollte ein JSON-Abbild von Ereignissen im Kalender des Benutzers angezeigt werden.
 
 ## <a name="display-the-results"></a>Anzeigen der Ergebnisse
 
-Nun können Sie HTML und CSS hinzufügen, um die Ergebnisse auf benutzerfreundlichere Weise anzuzeigen.
+Nun können Sie HTML hinzufügen, um die Ergebnisse auf eine benutzerfreundlichere Weise anzuzeigen.
 
-Öffnen `./app/views/calendar/index.html.erb` Sie den Inhalt, und ersetzen Sie ihn durch den folgenden Code.
+1. Öffnen Sie **./app/views/Calendar/Index.html.Erb** , und ersetzen Sie den Inhalt durch Folgendes.
 
-```html
-<h1>Calendar</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Organizer</th>
-      <th scope="col">Subject</th>
-      <th scope="col">Start</th>
-      <th scope="col">End</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @events.each do |event| %>
-      <tr>
-        <td><%= event['organizer']['emailAddress']['name'] %></td>
-        <td><%= event['subject'] %></td>
-        <td><%= event['start']['dateTime'].to_time(:utc).localtime.strftime('%-m/%-d/%y %l:%M %p') %></td>
-        <td><%= event['end']['dateTime'].to_time(:utc).localtime.strftime('%-m/%-d/%y %l:%M %p') %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-```
+    :::code language="html" source="../demo/graph-tutorial/app/views/calendar/index.html.erb" id="CalendarSnippet":::
 
-Dadurch wird eine Auflistung von Ereignissen durchlaufen und für jeden eine Tabellenzeile hinzugefügt. Entfernen Sie `render json: @events` die-Reihe `index` aus der `./app/controllers/calendar_controller.rb` Aktion in, und die APP sollte nun eine Tabelle mit Ereignissen rendern.
+    Dadurch wird eine Ereignissammlung durchlaufen und jedem Ereignis wird jeweils eine Tabellenzeile hinzugefügt.
 
-![Ein Screenshot der Ereignistabelle](./images/add-msgraph-01.png)
+1. Entfernen Sie `render json: @events` die-Reihe `index` aus der Aktion in **./app/Controllers/calendar_controller. RB**.
+
+1. Aktualisieren Sie die Seite, und die APP sollte jetzt eine Tabelle mit Ereignissen rendern.
+
+    ![Ein Screenshot der Tabelle mit Ereignissen](./images/add-msgraph-01.png)

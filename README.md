@@ -8,19 +8,11 @@ In dieser Übungseinheit erstellen Sie eine Ruby on Rails-Webanwendung mithilfe 
 
 - [Tutorial zu Ruby Microsoft Graph](https://docs.microsoft.com/graph/training/ruby-tutorial)
 
-## <a name="demos"></a>Demos
-
-Das [Demos](./Demos) -Verzeichnis in diesem Repository enthält Kopien des Projekts, die dem Ausführen einzelner Abschnitte des Lernprogramms entsprechen. Wenn Sie lediglich einen bestimmten Abschnitt des Lernprogramms Demo ausführen möchten, können Sie mit der Version aus dem vorherigen Abschnitt beginnen.
-
-- [01-Create-App](Demos/01-create-app): abgeschlossen [Erstellen einer Ruby on Rails-Webanwendung](https://docs.microsoft.com/graph/training/ruby-tutorial?tutorial-step=1)
-- [02-Add-Aad-auth](Demos/02-add-aad-auth): abgeschlossene [Add Azure AD-Authentifizierung](https://docs.microsoft.com/graph/training/ruby-tutorial?tutorial-step=3)
-- [03-Add-MSGraph](Demos/03-add-msgraph): abgeschlossene [Abrufen von Kalenderdaten](https://docs.microsoft.com/graph/training/ruby-tutorial?tutorial-step=4)
-
 ## <a name="completed-sample"></a>Abgeschlossenes Beispiel
 
 Wenn Sie das fertige Beispiel nur generieren möchten, indem Sie dieser Übungseinheit folgen, können Sie es hier finden.
 
-- [Fertig gestelltes Projekt](Demos/03-add-msgraph)
+- [Fertig gestelltes Projekt](demo)
 
 ## <a name="disclaimer"></a>Verzichtserklärung
 
