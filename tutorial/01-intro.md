@@ -10,7 +10,12 @@ In diesem Lernprogramm erfahren Sie, wie Sie eine Ruby on Rails-Webanwendung ers
 
 ## <a name="prerequisites"></a>Voraussetzungen
 
-Bevor Sie dieses Lernprogramm starten, sollte [Ruby](https://www.ruby-lang.org/en/downloads/) auf dem Entwicklungscomputer installiert sein. Wenn Sie keinen Ruby haben, besuchen Sie den vorherigen Link für Downloadoptionen.
+Bevor Sie dieses Lernprogramm starten, sollten Sie die folgenden Tools auf dem Entwicklungscomputer installiert haben.
+
+- [Ruby](https://www.ruby-lang.org/en/downloads/)
+- [Sqlite3](https://sqlite.org/index.html)
+- [Node.js](https://nodejs.org/en/)
+- [Garn](https://yarnpkg.com/)
 
 Sie sollten auch über ein persönliches Microsoft-Konto mit einem Postfach auf Outlook.com oder ein Microsoft-Arbeits-oder Schulkonto verfügen. Wenn Sie kein Microsoft-Konto haben, gibt es mehrere Optionen, um ein kostenloses Konto zu erhalten:
 
@@ -18,7 +23,12 @@ Sie sollten auch über ein persönliches Microsoft-Konto mit einem Postfach auf 
 - Sie können sich [für das Office 365 Entwicklerprogramm registrieren](https://developer.microsoft.com/office/dev-program) , um ein kostenloses Office 365-Abonnement zu erhalten.
 
 > [!NOTE]
-> Dieses Lernprogramm wurde mit Ruby Version 2.6.5 geschrieben. Die Schritte in diesem Leitfaden funktionieren möglicherweise mit anderen Versionen, jedoch nicht getestet.
+> Dieses Lernprogramm wurde mit den folgenden Versionen der erforderlichen Tools geschrieben. Die Schritte in diesem Leitfaden funktionieren möglicherweise mit anderen Versionen, jedoch nicht getestet.
+>
+> - Ruby-Version 2.6.6.
+> - Sqlite3 Version 3.31.1
+> - Node.js Version 14.15.0
+> - Garn Version 1.22.0
 
 ## <a name="feedback"></a>Feedback
 

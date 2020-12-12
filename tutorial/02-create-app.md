@@ -5,7 +5,7 @@ In dieser Übung verwenden Sie [Ruby on Rails](https://rubyonrails.org/) , um ei
 1. Wenn Rails nicht bereits installiert ist, können Sie es über die Befehlszeilenschnittstelle (CLI) mit dem folgenden Befehl installieren.
 
     ```Shell
-    gem install rails -v 6.0.2.2
+    gem install rails -v 6.0.3.4
     ```
 
 1. Öffnen Sie die CLI, navigieren Sie zu einem Verzeichnis, in dem Sie Berechtigungen zum Erstellen von Dateien haben, und führen Sie den folgenden Befehl aus, um eine neue Rails-APP zu erstellen.
@@ -56,11 +56,11 @@ Bevor Sie fortfahren, sollten Sie einige zusätzliche Edelsteine installieren, d
 
 In diesem Abschnitt erstellen Sie die grundlegende Benutzeroberfläche für die app.
 
-1. Öffnen Sie **./app/views/Layouts/Application.html.Erb** , und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen Sie **./app/views/Layouts/application.html. Erb** , und ersetzen Sie den Inhalt durch Folgendes.
 
     :::code language="html" source="../demo/graph-tutorial/app/views/layouts/application.html.erb" id="LayoutSnippet":::
 
-    Dieser Code fügt [Bootstrap](http://getbootstrap.com/) zur einfachen Formatierung hinzu, und [Font Awesome](https://fontawesome.com/) für einige einfache Symbole. Außerdem wird ein globales Layout mit einer Navigationsleiste definiert.
+    Dieser Code fügt [Bootstrap](http://getbootstrap.com/) für einfaches Styling und [Fabric Core](https://developer.microsoft.com/fluentui#/get-started#fabric-core) für einige einfache Symbole hinzu. Außerdem wird ein globales Layout mit einer Navigationsleiste definiert.
 
 1. Öffnen Sie **/App/Assets/Stylesheets/Application.CSS** , und fügen Sie Folgendes am Ende der Datei hinzu.
 
@@ -72,7 +72,7 @@ In diesem Abschnitt erstellen Sie die grundlegende Benutzeroberfläche für die 
     rails generate controller Home index
     ```
 
-1. Konfigurieren Sie `index` die Aktion auf `Home` dem Controller als Standardseite für die app. Öffnen Sie **./config/routes.RB** , und ersetzen Sie den Inhalt durch Folgendes:
+1. Konfigurieren Sie die `index` Aktion auf dem `Home` Controller als Standardseite für die app. Öffnen Sie **./config/routes.RB** , und ersetzen Sie den Inhalt durch Folgendes:
 
     ```ruby
     Rails.application.routes.draw do
@@ -84,9 +84,11 @@ In diesem Abschnitt erstellen Sie die grundlegende Benutzeroberfläche für die 
     end
     ```
 
-1. Öffnen Sie **./app/View/Home/Index.html.Erb** , und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen Sie **./app/View/Home/index.html. Erb** , und ersetzen Sie den Inhalt durch Folgendes.
 
     :::code language="html" source="../demo/graph-tutorial/app/views/home/index.html.erb" id="HomeSnippet":::
+
+1. Fügen Sie im Verzeichnis **./app/Assets/Images** eine PNG-Datei mit dem Namen **no-profile-photo.png** hinzu.
 
 1. Speichern Sie alle Änderungen, und starten Sie den Server neu. Nun sollte die APP sehr unterschiedlich aussehen.
 

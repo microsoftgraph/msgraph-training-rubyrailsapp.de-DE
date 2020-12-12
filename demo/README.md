@@ -45,14 +45,20 @@ Wenn Sie kein Microsoft-Konto haben, gibt es mehrere Optionen, um ein kostenlose
 
 ## <a name="configure-the-sample"></a>Konfigurieren des Beispiels
 
-1. Benennen Sie `./config/oauth_environment_variables.rb.example` die Datei `oauth_environment_variables.rb`in.
-1. Bearbeiten Sie `oauth_environment_variables.rb` die Datei, und nehmen Sie die folgenden Änderungen vor.
+1. Benennen `./config/oauth_environment_variables.rb.example` Sie die Datei in `oauth_environment_variables.rb` .
+1. Bearbeiten Sie die `oauth_environment_variables.rb` Datei, und nehmen Sie die folgenden Änderungen vor.
     1. Ersetzen `YOUR_APP_ID_HERE` Sie durch die **Anwendungs-ID** , die Sie im App-Registrierungs Portal erhalten haben.
     1. Ersetzen `YOUR APP PASSWORD HERE` Sie durch das Kennwort, das Sie aus dem App-Registrierungs Portal erhalten haben.
 1. Navigieren Sie in der Befehlszeilenschnittstelle (CLI) zu diesem Verzeichnis, und führen Sie den folgenden Befehl aus, um Anforderungen zu installieren.
 
     ```Shell
     bundle install
+    ```
+
+1. Führen Sie in ihrer CLI den folgenden Befehl aus, um Garn Pakete zu installieren.
+
+    ```Shell
+    yarn install
     ```
 
 1. Führen Sie in der CLI den folgenden Befehl aus, um die Datenbank der APP zu initialisieren.

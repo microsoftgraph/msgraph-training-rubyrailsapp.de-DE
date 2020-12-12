@@ -6,18 +6,18 @@ In dieser Übung erweitern Sie die Anwendung aus der vorherigen Übung, um die A
 
     :::code language="ruby" source="../demo/graph-tutorial/config/oauth_environment_variables.rb.example":::
 
-1. Ersetzen `YOUR_APP_ID_HERE` Sie durch die Anwendungs-ID aus dem Anwendungs Registrierungs Portal, `YOUR_APP_SECRET_HERE` und ersetzen Sie durch das Kennwort, das Sie generiert haben.
+1. Ersetzen `YOUR_APP_ID_HERE` Sie durch die Anwendungs-ID aus dem Anwendungs Registrierungs Portal, und ersetzen `YOUR_APP_SECRET_HERE` Sie durch das Kennwort, das Sie generiert haben.
 
     > [!IMPORTANT]
-    > Wenn Sie die Quellcodeverwaltung wie git verwenden, wäre es jetzt ein guter Zeitpunkt, die Datei `oauth_environment_variables.rb` aus der Quellcodeverwaltung auszuschließen, damit versehentlich keine APP-ID und Ihr Kennwort verloren gehen.
+    > Wenn Sie die Quellcodeverwaltung wie git verwenden, wäre es jetzt ein guter Zeitpunkt, die `oauth_environment_variables.rb` Datei aus der Quellcodeverwaltung auszuschließen, damit versehentlich keine APP-ID und Ihr Kennwort verloren gehen.
 
-1. Öffnen Sie **/config/Environment.RB** , und fügen Sie vor der `Rails.application.initialize!` Codezeile den folgenden Code hinzu.
+1. Öffnen Sie **/config/Environment.RB** , und fügen Sie vor der Codezeile den folgenden Code hinzu `Rails.application.initialize!` .
 
     :::code language="ruby" source="../demo/graph-tutorial/config/environment.rb" id="LoadOAuthSettingsSnippet" highlight="4-6":::
 
 ## <a name="setup-omniauth"></a>Setup OmniAuth
 
-Sie haben das `omniauth-oauth2` gem bereits installiert, aber damit es mit den Azure OAuth-Endpunkten funktioniert, müssen Sie [eine OAuth2-Strategie erstellen](https://github.com/omniauth/omniauth-oauth2#creating-an-oauth2-strategy). Dies ist eine Ruby-Klasse, die die Parameter für die Erstellung von OAuth-Anforderungen an den Azure-Anbieter definiert.
+Sie haben das gem bereits installiert `omniauth-oauth2` , aber damit es mit den Azure OAuth-Endpunkten funktioniert, müssen Sie [eine OAuth2-Strategie erstellen](https://github.com/omniauth/omniauth-oauth2#creating-an-oauth2-strategy). Dies ist eine Ruby-Klasse, die die Parameter für die Erstellung von OAuth-Anforderungen an den Azure-Anbieter definiert.
 
 1. Erstellen Sie eine neue Datei `microsoft_graph_auth.rb` mit dem Namen im Ordner **./lib**' * *, und fügen Sie den folgenden Code hinzu.
 
@@ -25,17 +25,17 @@ Sie haben das `omniauth-oauth2` gem bereits installiert, aber damit es mit den A
 
     Nehmen Sie sich einen Moment Zeit, um zu überprüfen, was dieser Code tut.
 
-    - Sie legt die `client_options` fest, um die Microsoft Identity Platform-Endpunkte anzugeben.
-    - Er gibt an, `scope` dass der Parameter während der Autorisierungsphase gesendet werden soll.
+    - Sie legt die fest `client_options` , um die Microsoft Identity Platform-Endpunkte anzugeben.
+    - Er gibt an, dass der `scope` Parameter während der Autorisierungsphase gesendet werden soll.
     - Die `id` Eigenschaft des Benutzers wird als eindeutige ID für den Benutzer zugeordnet.
-    - Es verwendet das Zugriffstoken zum Abrufen des Benutzerprofils aus Microsoft Graph, um den `raw_info` Hash auszufüllen.
+    - Es verwendet das Zugriffstoken zum Abrufen des Benutzerprofils aus Microsoft Graph, um den Hash auszufüllen `raw_info` .
     - Die Rückruf-URL wird überschrieben, um sicherzustellen, dass Sie mit dem registrierten Rückruf im App-Registrierungs Portal übereinstimmt.
 
 1. Erstellen Sie eine neue Datei `omniauth_graph.rb` mit dem Namen im Ordner **./config/initializers** , und fügen Sie den folgenden Code hinzu.
 
     :::code language="ruby" source="../demo/graph-tutorial/config/initializers/omniauth_graph.rb" id="ConfigureOmniAuthSnippet":::
 
-    Dieser Code wird ausgeführt, wenn die APP gestartet wird. Es lädt die OmniAuth-Middleware mit dem `microsoft_graph_auth` Anbieter, der mit den Umgebungsvariablen konfiguriert ist, die in **oauth_environment_variables. RB**festgelegt sind.
+    Dieser Code wird ausgeführt, wenn die APP gestartet wird. Es lädt die OmniAuth-Middleware mit dem `microsoft_graph_auth` Anbieter, der mit den Umgebungsvariablen konfiguriert ist, die in **oauth_environment_variables. RB** festgelegt sind.
 
 ## <a name="implement-sign-in"></a>Implementieren der Anmeldung
 
@@ -47,7 +47,7 @@ Nachdem die OmniAuth-Middleware nun konfiguriert wurde, können Sie mit dem Hinz
     rails generate controller Auth
     ```
 
-1. Öffnen Sie **./app/Controllers/auth_controller. RB**. Fügen Sie der `AuthController` -Klasse eine Rückrufmethode hinzu. Diese Methode wird von der OmniAuth-Middleware aufgerufen, sobald der OAuth-Fluss abgeschlossen ist.
+1. Öffnen Sie **./app/Controllers/auth_controller. RB**. Fügen Sie der-Klasse eine Rückrufmethode hinzu `AuthController` . Diese Methode wird von der OmniAuth-Middleware aufgerufen, sobald der OAuth-Fluss abgeschlossen ist.
 
     ```ruby
     def callback
@@ -61,14 +61,14 @@ Nachdem die OmniAuth-Middleware nun konfiguriert wurde, können Sie mit dem Hinz
 
     Im Moment wird der von OmniAuth bereitgestellte Hash gerendert. Verwenden Sie diese, um zu überprüfen, ob die Anmeldung funktionsfähig ist, bevor Sie fortfahren.
 
-1. Fügen Sie die Routen zu **./config/routes.RB**hinzu.
+1. Fügen Sie die Routen zu **./config/routes.RB** hinzu.
 
     ```ruby
     # Add route for OmniAuth callback
-    match '/auth/:provider/callback', to: 'auth#callback', via: [:get, :post]
+    match '/auth/:provider/callback', :to => 'auth#callback', :via => [:get, :post]
     ```
 
-1. Starten Sie den Server, und `https://localhost:3000`navigieren Sie zu. Klicken Sie auf die Schaltfläche zum Anmelden, um zu `https://login.microsoftonline.com`weitergeleitet zu werden. Melden Sie sich mit Ihrem Microsoft-Konto an, und stimmen Sie den angeforderten Berechtigungen zu. Der Browser wird an die APP umgeleitet, wobei der von OmniAuth generierte Hash angezeigt wird.
+1. Starten Sie den Server, und navigieren Sie zu `https://localhost:3000` . Klicken Sie auf die Schaltfläche zum Anmelden, um zu `https://login.microsoftonline.com`weitergeleitet zu werden. Melden Sie sich mit Ihrem Microsoft-Konto an, und stimmen Sie den angeforderten Berechtigungen zu. Der Browser wird an die APP umgeleitet, wobei der von OmniAuth generierte Hash angezeigt wird.
 
     ```json
     {
@@ -85,20 +85,50 @@ Nachdem die OmniAuth-Middleware nun konfiguriert wurde, können Sie mit dem Hinz
       },
       "extra": {
         "raw_info": {
-          "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users/$entity",
-          "id": "eb52b3b2-c4ac-4b4f-bacd-d5f7ece55df0",
-          "businessPhones": [
-            "+1 425 555 0109"
-          ],
-          "displayName": "Adele Vance",
-          "givenName": "Adele",
-          "jobTitle": "Retail Manager",
-          "mail": "AdeleV@contoso.onmicrosoft.com",
-          "mobilePhone": null,
-          "officeLocation": "18/2111",
-          "preferredLanguage": "en-US",
-          "surname": "Vance",
-          "userPrincipalName": "AdeleV@contoso.onmicrosoft.com"
+          "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(displayName,mail,mailboxSettings,userPrincipalName)/$entity",
+          "displayName": "Lynne Robbins",
+          "mail": "LynneR@contoso.OnMicrosoft.com",
+          "userPrincipalName": "LynneR@contoso.OnMicrosoft.com",
+          "id": "d294e784-840e-4f9f-bb1e-95c0a75f2f18@2d18179c-4386-4cbd-8891-7fd867c4f62e",
+          "mailboxSettings": {
+            "archiveFolder": "AAMkAGI2...",
+            "timeZone": "Pacific Standard Time",
+            "delegateMeetingMessageDeliveryOptions": "sendToDelegateOnly",
+            "dateFormat": "M/d/yyyy",
+            "timeFormat": "h:mm tt",
+            "automaticRepliesSetting": {
+              "status": "disabled",
+              "externalAudience": "all",
+              "internalReplyMessage": "",
+              "externalReplyMessage": "",
+              "scheduledStartDateTime": {
+                "dateTime": "2020-12-09T17:00:00.0000000",
+                "timeZone": "UTC"
+              },
+              "scheduledEndDateTime": {
+                "dateTime": "2020-12-10T17:00:00.0000000",
+                "timeZone": "UTC"
+              }
+            },
+            "language": {
+              "locale": "en-US",
+              "displayName": "English (United States)"
+            },
+            "workingHours": {
+              "daysOfWeek": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday"
+              ],
+              "startTime": "08:00:00.0000000",
+              "endTime": "17:00:00.0000000",
+              "timeZone": {
+                "name": "Pacific Standard Time"
+              }
+            }
+          }
         }
       }
     }
@@ -114,7 +144,7 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
 
     Die-Methode verwendet den OmniAuth-Hash als Parameter und extrahiert die relevanten Informationsbits und speichert diese dann in der Sitzung.
 
-1. Fügen Sie der `ApplicationController` Klasse Accessorfunktionen hinzu, um den Benutzernamen, die e-Mail-Adresse und das Zugriffstoken wieder aus der Sitzung abzurufen.
+1. Fügen Sie der Klasse Accessorfunktionen hinzu, `ApplicationController` um den Benutzernamen, die e-Mail-Adresse und das Zugriffstoken wieder aus der Sitzung abzurufen.
 
     ```ruby
     def user_name
@@ -123,6 +153,10 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
 
     def user_email
       session[:user_email]
+    end
+
+    def user_timezone
+      session[:user_timezone]
     end
 
     def access_token
@@ -134,7 +168,7 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
 
     :::code language="ruby" source="../demo/graph-tutorial/app/controllers/application_controller.rb" id="BeforeActionSnippet":::
 
-    Mit dieser Methode werden die Variablen festgelegt, die das Layout (in **Application. html. Erb**) verwendet, um die Benutzerinformationen in der Navigationsleiste anzuzeigen. Wenn Sie ihn hier hinzufügen, müssen Sie diesen Code nicht in jeder einzelnen Controller Aktion hinzufügen. Dies wird jedoch auch für Aktionen in der `AuthController`ausgeführt, was nicht optimal ist.
+    Mit dieser Methode werden die Variablen festgelegt, die das Layout (in **application.html. Erb**) verwendet, um die Benutzerinformationen in der Navigationsleiste anzuzeigen. Wenn Sie ihn hier hinzufügen, müssen Sie diesen Code nicht in jeder einzelnen Controller Aktion hinzufügen. Dies wird jedoch auch für Aktionen in der ausgeführt `AuthController` , was nicht optimal ist.
 
 1. Fügen Sie der `AuthController` Klasse in **./app/Controllers/auth_controller. RB** den folgenden Code hinzu, um die before-Aktion zu überspringen.
 
@@ -142,7 +176,7 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
     skip_before_action :set_user
     ```
 
-1. Aktualisieren Sie `callback` die-Funktion `AuthController` in der-Klasse, um die Token in der Sitzung zu speichern und zur Hauptseite zurückzuleiten. Ersetzen Sie die vorhandene `callback`-Funktion durch Folgendes.
+1. Aktualisieren Sie die `callback` -Funktion in der `AuthController` -Klasse, um die Token in der Sitzung zu speichern und zur Hauptseite zurückzuleiten. Ersetzen Sie die vorhandene `callback`-Funktion durch Folgendes.
 
     :::code language="ruby" source="../demo/graph-tutorial/app/controllers/auth_controller.rb" id="CallbackSnippet":::
 
@@ -150,7 +184,7 @@ Nun, da Sie Token abrufen können, ist es an der Zeit, eine Möglichkeit einzuri
 
 Bevor Sie dieses neue Feature testen, fügen Sie eine Möglichkeit zum Abmelden hinzu.
 
-1. Fügen Sie der `AuthController` Klasse die folgende Aktion hinzu.
+1. Fügen Sie der Klasse die folgende Aktion hinzu `AuthController` .
 
     :::code language="ruby" source="../demo/graph-tutorial/app/controllers/auth_controller.rb" id="SignOutSnippet":::
 
@@ -170,11 +204,11 @@ Bevor Sie dieses neue Feature testen, fügen Sie eine Möglichkeit zum Abmelden 
 
 ## <a name="refreshing-tokens"></a>Aktualisieren von Token
 
-Wenn Sie sich den von OmniAuth generierten Hash genauer ansehen, werden Sie feststellen, dass der Hash zwei Token enthält `token` : `refresh_token`und. Der Wert in `token` ist das Zugriffstoken, das in der `Authorization` Kopfzeile von API-aufrufen gesendet wird. Dies ist das Token, das es der App ermöglicht, im Namen des Benutzers auf Microsoft Graph zuzugreifen.
+Wenn Sie sich den von OmniAuth generierten Hash genauer ansehen, werden Sie feststellen, dass der Hash zwei Token enthält: `token` und `refresh_token` . Der Wert in `token` ist das Zugriffstoken, das in der `Authorization` Kopfzeile von API-aufrufen gesendet wird. Dies ist das Token, das es der App ermöglicht, im Namen des Benutzers auf Microsoft Graph zuzugreifen.
 
 Dieses Token ist jedoch nur kurzzeitig verfügbar. Das Token läuft eine Stunde nach seiner Ausgabe ab. Hier wird der `refresh_token` Wert nützlich. Anhand des Aktualisierungstoken ist die App in der Lage, ein neues Zugriffstoken anzufordern, ohne dass der Benutzer sich erneut anmelden muss. Aktualisieren Sie den Token-Verwaltungscode, um die Token-Aktualisierung zu implementieren.
 
-1. Öffnen Sie **./app/Controllers/application_controller. RB** , und fügen `require` Sie die folgenden Anweisungen am oberen Rand hinzu:
+1. Öffnen Sie **./app/Controllers/application_controller. RB** , und fügen Sie die folgenden `require` Anweisungen am oberen Rand hinzu:
 
     ```ruby
     require 'microsoft_graph_auth'
@@ -187,7 +221,7 @@ Dieses Token ist jedoch nur kurzzeitig verfügbar. Das Token läuft eine Stunde 
 
     Diese Methode verwendet das [oauth2](https://github.com/oauth-xx/oauth2) -gem (eine Abhängigkeit des `omniauth-oauth2` gem), um die Tokens zu aktualisieren, und aktualisiert die Sitzung.
 
-1. Ersetzen Sie die `access_token` aktuelle Methode durch Folgendes.
+1. Ersetzen Sie die aktuelle `access_token` Methode durch Folgendes.
 
     :::code language="ruby" source="../demo/graph-tutorial/app/controllers/application_controller.rb" id="AccessTokenSnippet":::
 
