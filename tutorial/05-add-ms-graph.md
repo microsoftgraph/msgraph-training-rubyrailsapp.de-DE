@@ -1,16 +1,16 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-In dieser Übung werden Sie das Microsoft Graph in die Anwendung integrieren. Für diese Anwendung verwenden Sie das [httparty](https://github.com/jnunemaker/httparty) -gem, um Anrufe an Microsoft Graph zu tätigen.
+In dieser Übung werden Sie die Microsoft-Graph in die Anwendung integrieren. Für diese Anwendung verwenden Sie das [httparty-Gem,](https://github.com/jnunemaker/httparty) um Anrufe an Microsoft Graph.
 
-## <a name="create-a-graph-helper"></a>Erstellen einer Graph-Hilfsfunktion
+## <a name="create-a-graph-helper"></a>Erstellen eines Graph Helfers
 
-1. Erstellen Sie einen Helfer zum Verwalten aller API-Aufrufe. Führen Sie den folgenden Befehl in der CLI aus, um den Helfer zu generieren.
+1. Erstellen Sie eine Hilfshilfe zum Verwalten aller Ihrer API-Aufrufe. Führen Sie den folgenden Befehl in Ihrer CLI aus, um den Hilfsbefehl zu generieren.
 
     ```Shell
     rails generate helper Graph
     ```
 
-1. Öffnen Sie **/App/Helpers/graph_helper. RB** , und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen **Sie ./app/helpers/graph_helper.rb,** und ersetzen Sie den Inhalt durch Folgendes.
 
     ```ruby
     require 'httparty'
@@ -44,49 +44,49 @@ In dieser Übung werden Sie das Microsoft Graph in die Anwendung integrieren. F�
     end
     ```
 
-Nehmen Sie sich einen Moment Zeit, um zu überprüfen, was dieser Code tut. Es wird eine einfache Get-oder Post-Anforderung über das `httparty` gem an den angeforderten Endpunkt gesendet. Er sendet das Zugriffstoken in der `Authorization` Kopfzeile und enthält alle übergebenen Abfrageparameter.
+Nehmen Sie sich einen Moment Zeit, um zu überprüfen, was dieser Code macht. Es wird eine einfache GET- oder POST-Anforderung über das `httparty` Gem an den angeforderten Endpunkt gesendet. Es sendet das Zugriffstoken in der Kopfzeile und enthält `Authorization` alle übergebenen Abfrageparameter.
 
-Um beispielsweise die `make_api_call` -Methode zu verwenden, um einen get-to durchführen zu können `https://graph.microsoft.com/v1.0/me?$select=displayName` , können Sie es wie folgt aufrufen:
+Wenn Sie beispielsweise die Methode verwenden `make_api_call` möchten, um ein GET zu verwenden, können Sie sie `https://graph.microsoft.com/v1.0/me?$select=displayName` wie so aufrufen:
 
 ```ruby
-make_api_call 'GET', '/v1.0/me', access_token, { '$select': 'displayName' }
+make_api_call 'GET', '/v1.0/me', access_token, {}, { '$select': 'displayName' }
 ```
 
-Sie werden später darauf aufbauen, wenn Sie weitere Features von Microsoft Graph in die APP implementieren.
+Sie bauen später darauf auf, wenn Sie weitere Microsoft Graph in der App implementieren.
 
 ## <a name="get-calendar-events-from-outlook"></a>Abrufen von Kalenderereignissen von Outlook
 
-1. Führen Sie in der CLI den folgenden Befehl aus, um einen neuen Controller hinzuzufügen.
+1. Führen Sie in Der CLI den folgenden Befehl aus, um einen neuen Controller hinzuzufügen.
 
     ```Shell
     rails generate controller Calendar index new
     ```
 
-1. Fügen Sie die neue Route zu **./config/routes.RB**.
+1. Fügen Sie die neue Route **zu ./config/routes.rb hinzu.**
 
     ```ruby
     get 'calendar', :to => 'calendar#index'
     ```
 
-1. Fügen Sie eine neue Methode zur Graph-Helfer hinzu, um [eine Kalenderansicht zu erhalten](https://docs.microsoft.com/graph/api/calendar-list-calendarview?view=graph-rest-1.0). Öffnen Sie **/App/Helpers/graph_helper. RB** , und fügen Sie dem Modul die folgende Methode hinzu `GraphHelper` .
+1. Fügen Sie dem Hilfshilfs-Graph eine neue Methode hinzu, um [eine Kalenderansicht zu erhalten.](https://docs.microsoft.com/graph/api/calendar-list-calendarview?view=graph-rest-1.0) Öffnen **Sie ./app/helpers/graph_helper.rb,** und fügen Sie dem Modul die folgende Methode `GraphHelper` hinzu.
 
     :::code language="ruby" source="../demo/graph-tutorial/app/helpers/graph_helper.rb" id="GetCalendarSnippet":::
 
     Überlegen Sie sich, was dieser Code macht.
 
     - Die URL, die aufgerufen wird, lautet `/v1.0/me/calendarview`.
-        - Die `Prefer: outlook.timezone` Kopfzeile bewirkt, dass die Anfangs-und Endzeiten in den Ergebnissen an die Zeitzone des Benutzers angepasst werden.
-        - Die `startDateTime` `endDateTime` Parameter und legen den Anfang und das Ende der Ansicht fest.
-        - Der `$select` Parameter schränkt die für die einzelnen Ereignisse zurückgegebenen Felder auf diejenigen ein, die von der Ansicht tatsächlich verwendet werden.
-        - Der `$orderby` Parameter sortiert die Ergebnisse nach dem Startzeitpunkt.
-        - Der `$top` Parameter schränkt die Ergebnisse auf 50-Ereignisse ein.
-    - Für eine erfolgreiche Antwort gibt es das Array von Elementen zurück, die im `value` Schlüssel enthalten sind.
+        - Der `Prefer: outlook.timezone` Header bewirkt, dass die Start- und Endzeiten in den Ergebnissen an die Zeitzone des Benutzers angepasst werden.
+        - Die `startDateTime` Parameter und legen den Anfang und das Ende der Ansicht `endDateTime` fest.
+        - Der Parameter beschränkt die für jedes Ereignis zurückgegebenen Felder auf die Felder, die `$select` von der Ansicht tatsächlich verwendet werden.
+        - Der `$orderby` Parameter sortiert die Ergebnisse nach Startzeit.
+        - Der `$top` Parameter beschränkt die Ergebnisse auf 50 Ereignisse.
+    - Für eine erfolgreiche Antwort gibt sie das Array von Elementen zurück, die im Schlüssel enthalten `value` sind.
 
-1. Fügen Sie der Graph-Hilfe eine neue Methode hinzu, um einen [IANA-Zeitzonenbezeichner](https://www.iana.org/time-zones) basierend auf einem Windows-Zeitzonennamen zu suchen. Dies ist erforderlich, da Microsoft Graph Zeitzonen als Windows-Zeitzonennamen zurückgeben kann, und die Ruby- **DateTime** -Klasse erfordert IANA-Zeitzonenbezeichner.
+1. Fügen Sie dem Hilfshilfs-Graph eine neue Methode hinzu, um eine [IANA-Zeitzonen-ID](https://www.iana.org/time-zones) basierend auf einem Windows zeitzonennamen zu suchen. Dies ist erforderlich, da Microsoft Graph Zeitzonen als Windows Zeitzonennamen zurückgeben kann und die Ruby **DateTime-Klasse** IANA-Zeitzonenbezeichner erfordert.
 
     :::code language="ruby" source="../demo/graph-tutorial/app/helpers/graph_helper.rb" id="ZoneMappingSnippet":::
 
-1. Öffnen Sie **/App/Controllers/calendar_controller. RB** , und ersetzen Sie den gesamten Inhalt durch Folgendes.
+1. Öffnen **Sie ./app/controllers/calendar_controller.rb,** und ersetzen Sie den gesamten Inhalt durch Folgendes.
 
     ```ruby
     # Calendar controller
@@ -114,20 +114,20 @@ Sie werden später darauf aufbauen, wenn Sie weitere Features von Microsoft Grap
     end
     ```
 
-1. Starten Sie den Server neu. Melden Sie sich an, und klicken Sie in der Navigationsleiste auf den Link **Kalender** . Wenn alles funktioniert, sollte ein JSON-Abbild von Ereignissen im Kalender des Benutzers angezeigt werden.
+1. Starten Sie den Server neu. Melden Sie sich an, **und** klicken Sie in der Navigationsleiste auf den Link Kalender. Wenn alles funktioniert, sollte ein JSON-Abbild von Ereignissen im Kalender des Benutzers angezeigt werden.
 
 ## <a name="display-the-results"></a>Anzeigen der Ergebnisse
 
-Nun können Sie HTML hinzufügen, um die Ergebnisse auf eine benutzerfreundlichere Weise anzuzeigen.
+Jetzt können Sie HTML hinzufügen, um die Ergebnisse benutzerfreundlicher anzeigen zu können.
 
-1. Öffnen Sie **./app/views/Calendar/index.html. Erb** , und ersetzen Sie den Inhalt durch Folgendes.
+1. Öffnen **Sie ./app/views/calendar/index.html.erb,** und ersetzen Sie dessen Inhalt durch Folgendes.
 
     :::code language="html" source="../demo/graph-tutorial/app/views/calendar/index.html.erb" id="CalendarSnippet":::
 
     Dadurch wird eine Ereignissammlung durchlaufen und jedem Ereignis wird jeweils eine Tabellenzeile hinzugefügt.
 
-1. Entfernen Sie die- `render json: @events` Reihe aus der `index` Aktion in **./app/Controllers/calendar_controller. RB**.
+1. Entfernen Sie `render json: @events` die Zeile aus der Aktion in `index` **./app/controllers/calendar_controller.rb**.
 
-1. Aktualisieren Sie die Seite, und die APP sollte jetzt eine Tabelle mit Ereignissen rendern.
+1. Aktualisieren Sie die Seite, und die App sollte nun eine Tabelle mit Ereignissen rendern.
 
     ![Ein Screenshot der Tabelle mit Ereignissen](./images/add-msgraph-01.png)
